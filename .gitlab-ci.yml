@@ -1,0 +1,18 @@
+unittests:
+  script:
+    #This runs some units tests
+    - apt-get update -qy
+    - apt-get install -y python3-dev python3-pip
+    - python3 -m pip install -e .
+    - cd tests
+    - python3 controller_unit_test.py
+    - python3 spectrometer_unit_test.py
+  
+# resin_deploy:
+#   stage: deploy
+#   when: on_success
+#   only: resin-stable@gitlab-org/gitlab-ce
+#   script:
+#     #This pushes the new stable code to the raspberry pi
+
+

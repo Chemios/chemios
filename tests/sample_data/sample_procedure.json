@@ -1,0 +1,34 @@
+{
+  "type": "procedure",
+  "procedure":
+	   {
+    	"type": "high-throughput screening",
+      "run_uuid": "aad9c46c-34db-4d9e-91c6-2fdc1af07c69",
+    	"steps": [
+    		     {
+        			"precursor_1": "water",
+  	          "precursor_2": "not water",
+        			"gas": "nitrogen",
+        			"precursor_ratio": 3,
+        			"gas_liquid_ratio": 0.5,
+        			"temp_set_point": 90,
+        			"fluorescence": false,
+        			"absorbance": true,
+        			"net_flow_rate": 12.5,
+              "integration_time": 3000
+            },
+            {
+              "precursor_1": "water",
+              "precursor_2": "not water",
+              "gas": "nitrogen",
+              "precursor_ratio": 3,
+              "gas_liquid_ratio": 0.5,
+              "temp_set_point": 100,
+              "fluorescence": false,
+              "absorbance": true,
+              "net_flow_rate": 12.5,
+              "integration_time": 3000
+          }
+    	   ]
+    }
+}
