@@ -12,7 +12,7 @@ import serial
 import json
 import time
 import sys
-from .utils import serial_write, write_i2c, construct_cmd, sio_write
+from chemios.utils import serial_write, write_i2c, construct_cmd, sio_write
 import re
 import io
 import logging
@@ -128,7 +128,7 @@ class Pump(object):
         """ Get info about the current pump
 
         Yields:
-            obj: model, address, syringe_diameter
+            obj: model, address, syringe_diameter, rate
 
         Todo:
             * Properly implement reading information from serial
