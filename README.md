@@ -4,7 +4,6 @@ The Chemios Brain is a raspberry pi 3 (RPi3) running python code that controls o
 
 prototypes/prototypeonemain.py is the file that main file used to control the device. It interacts with AWS IoT using the [AWS IoT python SDK](https://github.com/aws/aws-iot-device-sdk-python) to receive instructions/procedures from and send data to our web app. The chemiosbrain package takes care of communicating with each piee of reactor equipment and keeping track of the state of the reactor.
 
-![Schematic of the Chemios Brain Architecture](./chemios_firmware_architecture.png)
 
 ## resin.io
 
