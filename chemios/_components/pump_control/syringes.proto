@@ -1,0 +1,19 @@
+syntax = 'proto3';
+
+message Syringe {
+    optional string manufacturer = 1;
+    optional string volume = 2
+    optional float inner_diameter = 3; //inner diameter in mm
+
+    message PumpLimits {
+        optional string pump_manufacturer = 3;
+        optional string pump_model = 4;
+        optional float min_flowrate = 1; // minimum flowrate in uL/hr
+        optional float max_flowrate = 2; //maximum flowraate in uL/hr
+    }
+    repeated PumpLimits limits = 4;
+}
+
+message Syringes {
+    repeated Syringe syringes = 1;
+}

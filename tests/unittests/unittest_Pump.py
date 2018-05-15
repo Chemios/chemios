@@ -3,6 +3,7 @@ import serial
 import time
 import json
 import pytest
+import re
 
 # See https://faradayrf.com/unit-testing-pyserial-code/
 
@@ -26,13 +27,16 @@ def compare(s, t):
         return False
     return not t
 
+def strip_commands(string):
+    match = re.search()
 
+    
 @pytest.mark.parametrize('pump_manfuacturer', ['HarvardApparatus', 
                                                'Chemyx', 
                                                'NewEra'])
 def test_Methods(pump_manufacturer):
     """Test that Each Pump has the corrrect methods"""
-    
+
     methods = ['run', 'set_rate', 'stop', 'get_info', 'configure']
     module_name = "PumpControl.{}".format(pump_manufacturer)
     pump  = import_module(module_name)
@@ -45,12 +49,34 @@ def test_Methods(pump_manufacturer):
     success = compare(pump_methods, methods)
     assert success == True
 
-@pytest.mark.parametrize('model',['PhD-Ultra'])
-@pyteest.mark.parametrize()
-def test_HarvardApparatus(model):
-    ser = create_serial_port() #automatically imported form conftest
+#Pull in list of all syringes manufacturers and models
+with open('syringes.json', 'r') as f:
+    syringe_data = json.load(f.read())
 
-    pump =  PumpControl.HarvardApparatus(model, 1, )
+
+@pytest.mark.parametrize('model',['PhD-Ultra'])
+@pytest.mark.parametrize('syringe_object', syringe_data['syringes'])
+def test_HarvardApparatus(model, syringe_object):
+    #Create serial port (#automatically imported form conftest)
+    ser = create_serial_port() 
+    
+    #Construct syringe type dictionary
+    syringe_type = {'manufacturer': syringe_object['manufacturer'],
+                    'volume': syringe_object['volume']
+                    }
+
+    #Instantiate pump
+    pump =  PumpControl.HarvardApparatus(
+                                         model=model,
+                                         address=1,
+                                         syringe_type=syringe_type,
+                                         ser = ser)
+    
+    #Construct volume
+    output = ser.readline()
+
+    
+    
 
        
 
