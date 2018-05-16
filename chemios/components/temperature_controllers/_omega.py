@@ -34,7 +34,7 @@ pre_security_register = 768
 security_register_pre = 5376
 security_register_post = 5632
 
-class TemperatureController(object):
+class OmegaCN9300Series(object):
     '''Class to Control Omega CN 9311 Temperature Controller
     Attributes
         port (str): Serial port over which communication should be sent

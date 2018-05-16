@@ -1,4 +1,4 @@
-from chemios.components import PumpControl
+from chemios.components import pumps
 import serial
 import time
 import json
@@ -26,10 +26,6 @@ def compare(s, t):
     except ValueError:
         return False
     return not t
-
-def strip_commands(string):
-    match = re.search()
-
     
 @pytest.mark.parametrize('pump_manfuacturer', ['HarvardApparatus', 
                                                'Chemyx', 
@@ -38,7 +34,7 @@ def test_Methods(pump_manufacturer):
     """Test that Each Pump has the corrrect methods"""
 
     methods = ['run', 'set_rate', 'stop', 'get_info', 'configure']
-    module_name = "PumpControl.{}".format(pump_manufacturer)
+    module_name = "pumps.{}".format(pump_manufacturer)
     pump  = import_module(module_name)
     pump_methods = []
     #Check all attributes that are not protected 

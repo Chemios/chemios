@@ -54,6 +54,15 @@ def convert_to_lists(df):
                 pass
     return output
 
+#Import module
+def import_module(name):
+    '''Import a module from a string'''
+    components = name.split('.')
+    mod = __import__(components[0])
+    for comp in components[1:]:
+        mod = getattr(mod, comp)
+    return mod 
+
 # def make_json_compatible(data):
 #     if isinstance(data, dict):
 #         keys = list(data.keys())

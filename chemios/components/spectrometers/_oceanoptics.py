@@ -14,7 +14,7 @@ import pandas as pd
 
 #Note to self: Make the buffer a list of dictionaries each with the stage position and spectraself.
 #Use pop(0) to pop off the first spectra in the buffer when get_spectrum is called
-class Spectrometer(object):
+class OceanOptics(object):
     """Class to define the spectrometers
     Attributes:
         spectrometer_model (str): Model of the spectrometer (e.g., FLMS02673)

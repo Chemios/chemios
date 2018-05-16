@@ -14,7 +14,7 @@ setup(
     author = "Chemios",
     author_email = "hello@chemios.io",
     description = ("Chemios Framework: Automatically control all your laboratory equipment through one easy-to-use interface"),
-    packages = find_packages('chemios', exclude=['tests']),
+    packages = find_packages(exclude=['tests']),
     install_requires = ['arrow', 'numpy', 'pandas', 'minimalmodbus'],
     long_description_content_type = ' text/markdown',
     classifiers=[
