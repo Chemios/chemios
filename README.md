@@ -28,32 +28,32 @@ Watch the video guide here or follow the steps below to design and run your firs
 
 ## <a name="examples"></a> Examples
 
-Interacting with a Harvard Apparatus Pump
+Interacting with a Chemyx Pump
 ```python
-from chemios.components.pumps import HarvardApparatus
+from chemios.components.pumps import Chemyx
 from time import sleep
 
 #Configuration for 10 mL Hamilton Glass Tight Syringe
 syringe_type = {'manufacturer': 'hamilton', 
                 'volume': 10 }
 
-#Instantiate a Harvard Apparatus Phd-Ultra pump
-HA = HarvardApparatus(model='PhD-Ultra',
+#Instantiate a Chemyx OEMs
+C = HarvardApparatus( model='OEM',
                       address=1,
                       syringe_type = syringe_type)
 
 #Set the flowrate to infuse at 100 microliters per minute
 rate = {'value': 100,
         'units': UM}                     
-HA.set_rate(rate=rate
+C.set_rate(rate=rate
             direction = 'INF')
 
 #Run the pump for 5 seconds
-HA.run()
+C.run()
 sleep(5)
 
 #Stop the pump
-HA.stop()
+C.stop()
 ```
 
 ## <a name="features"></a> Equipment
@@ -64,9 +64,12 @@ HA.stop()
      * Temperature Controllers: Omega CN 9300 Series
 
 - Roadmap:
-     * 
+     * Complete Unit Test Framework
+     * Update Device Code
+     * Create online documentation
+
 
 ## <a name="contributing"></a> Contributing
 
-We'd love to have your contributions! We are looking in particulary for people to extend the framework to work with more types of laboratory equipment To contribute, fork the repository, make your changes and submit a pull request. If those instructions make no sense to you, check out these [instructions](https://gist.github.com/Chaser324/ce0505fbed06b947d962)
+We'd love to have your contributions! We are looking in particulary for people to extend the framework to work with more types of laboratory equipment To contribute, fork the repository, make your changes and submit a pull request. If those instructions make no sense to you, check out these [instructions](https://gist.github.com/Chaser324/ce0505fbed06b947d962).
 
