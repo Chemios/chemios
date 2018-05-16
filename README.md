@@ -1,53 +1,22 @@
-# chemios
+![Chemios Framework ReadMe Banner](./assets/framework_readme_banner.jpg)
 
-Chemios is a python package for automated control of laboratory equipment.  We are in the process of open sourcing this package. 
+ **Chemios Framework** — Control pumps, spectrometers, reactors and more through one easy-to-use software package.
+ 
+ The Chemios Framework takes care of the idiosyncrancies of interfacing with each piece of lab equipment, so you can focus automating your experiments. 
+
+ 
+ The framework is written in python (the unoffical language of science), made open-source and is actively maintained.
 
 
-## [controller](./chemiosbrain/controller.py)
+## Contents
 
-This is the main module in chemiosbrain. It currently has two classes: Reactor, which is a general abstraction of a reactor, and FlowReactor, which inherits reactor and represents our first flow reactor. Flowreactor takes care of communicating with the pumps, temperature controller, light sources and spectrometer. It also manages the state of the reactor, so you don't have to.
+ - Quick Start
+ - Examples
+ - Features
+ - Contributing
 
-You interact with either class as follows:  
 
-1. Create an instance of a reactor (e.g., flow_reactor) passing the appropriate parameters/objects.
-2. Update any needed parameters (e.g., blank spectrometer data, stage positions).
-3. Add a new procedure or single instruction via the new_instruction method.
-4. Call next() to advance through the procedure or the instruction.
-5. "Run Complete" or "Instruction Complete" will be returned by next() once there are no more steps left.
-
-For example:
-
-    from chemiosbrain.controller import Reactor
-    import uuid
-    from pprint import pprint
-
-    id = hex(uuid.getnode())
-    ip = '192.168.1.1'
-    reactor = Reactor(id, ip)
-    instruction = {
-                    "type": "single instruction",
-                    "instruction": {
-                      "pump_1_rate": 120.1,
-                      "pump_2_rate": 60,
-                      "pump_3_rate": 4.25,
-                      "temp_setpoint": 90,
-                      "light_source_1_on": true,
-                      "light_source_2_on": false,
-                      "uv_spec_integration_time": 3000,
-                      "uv_spec_scans_to_average": 12,
-                      "viewing_port_number": 2
-                      }
-                    }
-     response = reactor.new_instruction(instruction)
-     print(response)  #Should return "Single Instruction Created"
-     response = reactor.next()
-     print(response) #Should return "Next Step Initiated"
-     status = reactor.get_status()
-     #Should yield a json object with a status update.
-     #See tests/sample_data/status_update_instruction for an example
-     pprint(status)  
-
-## [pump_control](./chemiosbrain/pump_control.py)
+## 🗒 [pump_control](./chemiosbrain/pump_control.py)
 
 The pump_control module supports control of the pumps.  Primarily, we are using the Chemyx OEM pump. You can interact with the pumps as follows:
 
