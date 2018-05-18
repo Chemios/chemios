@@ -1,127 +1,69 @@
-'''
-/*
- * Copyright 2018 Chemios
- * Chemios Reactor Brain Controller
- *
- * This code receives instructions from AWS IoT and used those to run the reactor.
- *
- */
- '''
+'''Chemyx Pump Module
 
-import serial
-import json
+Chemyx manufacturers several types of syringe pumps, which can be found on their website:
+https://www.chemyx.com/
+
+This module can be used to control Chemyx pumps.
+
+'''
+
+import serial 
 import time
-import sys
-from chemios.utils import serial_write, write_i2c, construct_cmd, sio_write
 import re
 import io
 import logging
+from chemios.utils import serial_write, write_i2c, construct_cmd, sio_write
+
+#Create syringe_type tuple for valdiation
+class _syringe(NamedTuple):
+    manufacturer: str
+    volume: float
+ 
 
 
 class Chemyx(object):
-    """ Class for interacting with pumps
+    """ Class for interacting with Chemyx pumps
 
     Attributes:
-        model (str): Pump model; either Chemyx,  NE-1000 or DIY
-        address (str): Pump address
-        diameter (float, optional): Diameter of syringe pump in millimeters. Defaults to 30 mm.
-        volume (float, optional): Volume of syringe. Defaults to 10 mL
-        rate_limits: array of lower limit and upper flowrate limit in microliters/hr
-        ser (:obj:): Serial object from pyserial (used for Chemyx and NE-100 pump)
-        bus (:obj:): i2C bus object if the DIY pump is used
+        model (str): Pump model, currently only OEM
+        syringe_type (NamedTuple): Syringe manufacturer and volume  
+        ser (serial.Serial): The :class:`serial` object for the Chemyx pump
+    
+    Note:
+        For the OEM module, the baudrate should be 38400
     """
 
-    def __init__(self, model, address, syringe_type={}, ser=None, bus=None):
-        self.pump_models = {'names': ['NE-1000', 'DIY', 'Chemyx', 'HA-PHD-Ultra']}
-        self.address = address #Adress for the pump
+    def __init__(self, model: str, syringe_type: _syringe, ser: serial.Serial):
         self.model = model #model
         self.syringe_type = syringe_type
         self.ser = ser #serial object
-        self.bus = bus #i2c bus object
-        
-
-        #Validation
-        if self.model not in self.pump_models['names']:
-            raise ValueError('Please choose one of the listed pumps'+ json.dumps(self.pump_models,indent=2))
-        if self.model == 'NE-1000' and self.ser is None:
-            raise ValueError('Serial object must be provided for communication with the NE-1000.')
-        if self.model == 'DIY' and self.bus is None:
-            raise ValueError('i2C bus must be provided for communication with the DIY pump.')
-        if self.model == 'Chemyx' and self.ser is None:
-            raise ValueError('Serial object must be provided for communication with the NE-1000.')
-        if self.model == 'HA-PHD-Ultra' and self.ser is None:
-            raise ValueError('Serial object must be provided for communication with Harvard Apparatus PHD Ultra')
 
         #Internal variables
         self.sio = io.TextIOWrapper(io.BufferedRWPair(self.ser, self.ser))
         self.rate = {'value': None,'units': None}
         self.direction = None #INF for infuse or WDR for withdraw
+        self.pump_models = ['OEM']
         self.sleep_time = 0.1
-        try:
-            #rate limits in microliters/hr
-            self.rate_limits = self.syringe_type['rate_limits']
-            self.diameter = self.syringe_type['diameter']
-            #Volume in mL
-            if self.syringe_type['volume'][1] != 'ml':
-                raise ValueError("Volume must be in ml")
-            self.volume = self.syringe_type['volume'][0]
-        except KeyError:
-            self.rate_limits = {}
-            self.diameter = None
-            self.volume =  None
-            if self.model == 'Chemyx':
-                raise ValueError("Please pass diameter, volume and rate limits array in syringe_type")
-            else:
-                pass
 
-        #Set up pumps using serial
-        if self.model == 'NE-1000':
-            #Set NE-1000 continuous pumping (i.e., 0 volume to dispense)
-            serial_write(self.ser, construct_cmd("VOL0\x0D", self.address), "setup continuous pumping")
-            time.sleep(0.5)
+        #Validation------------------------------------------------------------
+        #Check that the model is one of the available models
+        if self.model not in self.pump_models:
+            raise ValueError('{} is not one of the currently available pump models'.format(self.model))
+        
+        #Check for the correct baudrate
+        if self.model == 'OEM' and self.ser.baudrate != 38400:
+            raise ValueError("Baudrate is {}. Please change to 38400 for Chemyx OEM pump.".format(self.ser.baudrate))
+        
+
+        #Connection------------------------------------------------------------
+        #Set diameter
+        if self.diameter is not None:
+            cmd = 'set diameter %0.3f\x0D'%(self.diameter)
+            serial_write(self.ser, cmd, "set_diameter", True)
             self.ser.flush()
-        if self.model == 'Chemyx':
-            #Check pump address by units (i.e., I'm setting pump_1 units to 1 and pump_2 units to 2)
-            response = sio_write(self.sio, "view parameter\x0D", True, timeout =5)
-            try:
-                match2 = re.search(r'(?<=unit = )\d', response, re.M)
-                unit_number = match2.group(0)
-            except Exception:
-                raise IOError("Wrong pump address")
-            #raise IOError("Wrong pump address")
-            if int(unit_number) != int(address):
-                raise IOError("Wrong pump address")
-
-            if self.diameter is not None:
-                cmd = 'set diameter %0.3f\x0D'%(self.diameter)
-                diameter = serial_write(self.ser, cmd, "set_diameter", True)
-                self.ser.flush()
-        #Set up PHD Ultra
-        if self.model == 'HA-PHD-Ultra':    
-            #Set the syringe type
-            try:
-                #Check that it's plugged into this port
-                #and the right type of commands are being used
-                # for i in range(3): self.ser.flush()
-                # response = sio_write(self.sio, "CMD", True, timeout=5)
-                # match = re.search(r'(Ultra)', response, re.M)
-                # if match is None:
-                #     status_text = "Pump not set to Ultra command set"
-                #     raise IOError(status_text)
-                cmd = "syrm {} {} {}\x0D".format(
-                                             syringe_type["code"],
-                                             syringe_type['volume'][0],
-                                             syringe_type['volume'][1]
-                )
-                for i in range(3): self.ser.flush()
-                sio_write(self.sio, cmd, False, timeout=1)
-                time.sleep(0.1)
-                #Check back on that the manfacturer was set correctly
-                for i in range(3): self.ser.flush()
-                output = sio_write(self.sio, "syrm\x0D", True, timeout = 2)
-                logging.debug("Output from setting syringe manufacture: {}".format(output))
-            except ValueError as e:
-                logging.debug(e)
+        
+        logging.debug("Connecting to Chemyx pump")
+        response = sio_write(self.sio, "view parameter\x0D", True, timeout =5)
 
 
     def get_info(self):
@@ -302,4 +244,3 @@ class Chemyx(object):
             my_cmd = "0:&"
             write_i2c(my_cmd, self.bus, self.address)
 
-\

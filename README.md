@@ -18,7 +18,7 @@
 
 Watch the video guide here or follow the steps below to design and run your first experiment in minutes.
 
-1. [Install python](https://www.python.org/downloads/) (version 3 or above) if you haven't already. Note that it is recommended to use python installed in  [cygwin](https://cygwin.com/install.html) terminal on Windows.
+1. [Install python](https://www.python.org/downloads/) (version 3 or above) if you haven't already. Note that it is recommended to use python installed on the [cygwin](https://cygwin.com/install.html) terminal on Windows.
 2. Open up your terminal and install the chemios package with the following command:
     ```bash
     pip install chemios
@@ -38,9 +38,9 @@ syringe_type = {'manufacturer': 'hamilton',
                 'volume': 10 }
 
 #Instantiate a Chemyx OEMs
-C = HarvardApparatus( model='OEM',
-                      address=1,
-                      syringe_type = syringe_type)
+C = Chemyx( model='OEM',
+            address=1,
+            syringe_type = syringe_type)
 
 #Set the flowrate to infuse at 100 microliters per minute
 rate = {'value': 100,
