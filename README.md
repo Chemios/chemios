@@ -71,5 +71,7 @@ C.stop()
 
 ## <a name="contributing"></a> Contributing
 
-We'd love to have your contributions! We are looking in particulary for people to extend the framework to work with more types of laboratory equipment To contribute, fork the repository, make your changes and submit a pull request. If those instructions make no sense to you, check out these [instructions](https://gist.github.com/Chaser324/ce0505fbed06b947d962).
+We ❤️  contributors!
+
+We are looking in particular for people to extend the framework to work with more types of laboratory equipment. To contribute, fork the repository, make your changes and submit a pull request. [This](https://gist.github.com/Chaser324/ce0505fbed06b947d962) is a nice set of instructions on how to do that.  We'll review the changes and add them to the library.
 
