@@ -1,5 +1,8 @@
 ![Chemios Framework ReadMe Banner](./assets/framework_readme_banner.jpg)
 
+[![CircleCI](https://circleci.com/gh/Chemios/chemios.svg?style=svg)](https://circleci.com/gh/Chemios/chemios)
+
+
  **Chemios Framework** — Automate your laboratory through an easy-to-use software package.
  
  The Chemios Framework reduces the time to make discoveries by helping you automate tedious tasks. It has features for interfacing with laboratory equipment.

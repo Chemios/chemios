@@ -5,7 +5,7 @@ from ._syringe_data import SyringeData
 from typing import NamedTuple
 
  
-#Create syringe_type tuple for valdiation
-class _syringe(NamedTuple):
-    manufacturer: str
-    volume: float
+# #Create syringe_type tuple for valdiation
+# class _syringe(NamedTuple):
+#     manufacturer: str
+#     volume: float
