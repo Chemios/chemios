@@ -8,13 +8,13 @@
 
 ## Contents
 
- - 🛠️[Install](#installation)
+ - 🛠️[Installation](#installation)
  - 👍 [Examples](#examples)
  - ⚙️ [Compatabile Equipment](#features)
  - 🎁 [Contributing](#contributing)
 
 
-## 🛠️<a name="installation"></a> Install
+## 🛠️<a name="installation"></a> Installation
 
 Watch the video guide here or follow the steps below to design and run your first experiment in minutes.
 
