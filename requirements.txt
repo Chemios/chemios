@@ -1,0 +1,6 @@
+arrow
+numpy
+pandas
+minimalmodbus
+tinydb
+pytest
