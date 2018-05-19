@@ -8,7 +8,11 @@
 
 ## Contents
 
+<<<<<<< HEAD
  - 🛠️[Installation](#installation)
+=======
+ - 🛠️ [Installation](#installation)
+>>>>>>> 7c11aef5ebb326daf555c0fdb7417b7e7a84fb31
  - 👍 [Examples](#examples)
  - ⚙️ [Compatabile Equipment](#features)
  - 🎁 [Contributing](#contributing)
