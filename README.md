@@ -8,13 +8,13 @@
 
 ## Contents
 
- - [Install](#installation)
- - [Examples](#examples)
- - [Features](#features)
- - [Contributing](#contributing)
+ - 🛠️[Install](#installation)
+ - 👍 [Examples](#examples)
+ - ⚙️ [Compatabile Equipment](#features)
+ - 🎁 [Contributing](#contributing)
 
 
-## <a name="installation"></a> Install
+## 🛠️<a name="installation"></a> Install
 
 Watch the video guide here or follow the steps below to design and run your first experiment in minutes.
 
@@ -26,7 +26,7 @@ Watch the video guide here or follow the steps below to design and run your firs
 3. Now you can import the chemios package and begin to use it in python scripts.
 
 
-## <a name="examples"></a> Examples
+## 👍 <a name="examples"></a> Examples
 
 Interacting with a Chemyx Pump
 ```python
@@ -56,7 +56,7 @@ sleep(5)
 C.stop()
 ```
 
-## <a name="features"></a> Equipment
+## ⚙️ <a name="features"></a> Compatible Equipment
 
 - Chemios currently works with the following types of devices:
      * Syringe Pumps: Harvard Apparatus, Chemyx, and New-Era
@@ -69,9 +69,9 @@ C.stop()
      * Create online documentation
 
 
-## <a name="contributing"></a> Contributing
+## 🎁 <a name="contributing"></a> Contributing
 
-We ❤️  contributors!
+We ❤️ contributors!
 
 We are looking in particular for people to extend the framework to work with more types of laboratory equipment. To contribute, fork the repository, make your changes and submit a pull request. [This](https://gist.github.com/Chaser324/ce0505fbed06b947d962) is a nice set of instructions on how to do that.  We'll review the changes and add them to the library.
 
