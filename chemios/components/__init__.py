@@ -1,2 +1,2 @@
-__all__ = ['pumps', 'temperature_controller', 'spectrometer']
+__all__ = ['pumps', 'temperature_controllers', 'spectrometers']
 

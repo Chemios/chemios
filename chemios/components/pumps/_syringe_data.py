@@ -65,6 +65,8 @@ class SyringeData(object):
                                           (Syringe.volume == volume))         
         logging.debug('{} {} mL syringe added to the database.\n'
                       .format(manufacturer, volume))
+        if type(syringe_id) == list:
+            syringe_id = syringe_id[0]
         return syringe_id
 
     def add_pump(self, manufacturer: str, model: str):
@@ -90,7 +92,8 @@ class SyringeData(object):
         pump_id = self.pumps.insert(new_pump)
         logging.debug('{} {} pump added to the database.\n'
                       .format(manufacturer, model))
-        
+        if type(pump_id) == list:
+            pump_id = pump_id[0]
         return pump_id
 
     def add_limits(self, pump_id: int, syringe_id: int, 
@@ -107,10 +110,19 @@ class SyringeData(object):
             raise ValueError("Unique syringe id {} does not exist in the database."
                             .format(syringe_id))
 
-        new_limits = {str(syringe_id): [min_rate, max_rate]}
+        new_limits = [min_rate, max_rate]
+        pump = self.pumps.get(doc_id=pump_id)
+        try:
+            pump['limits'][str(syringe_id)] = new_limits
+        except KeyError:
+            pump['limits'] = {str(syringe_id): new_limits}
+        except TypeError:
+            pump['limits'] = {str(syringe_id): new_limits}
+        except AttributeError:
+            pump['limits'] = {str(syringe_id): new_limits}
+            
         #Add or update the pump table
-        pump_id = self.pumps.update(update_dict('limits', new_limits),doc_ids=[pump_id])
-
+        self.pumps.update(pump,doc_ids=[pump_id])
     
     def find_id(self, query: dict):
         '''Search for a syringe or pump unique id
@@ -145,18 +157,19 @@ class SyringeData(object):
             if len(syringe) > 1:
                 raise LookupError('There are multiple matches for this'
                                   ' syringe manufacturer and volume: {}.'.format(syringe))
+            if len(syringe) == 0:
+                return None
             return syringe[0].doc_id
         elif 'model' in keys:
             Pumps = Query()
-            pump = self.pumps.search((Pumps.manufacturer == query['manufacturer']) &
-                                     (Pumps.model == query['model']))
-            if len(pump) > 1:
-                raise LookupError('There are multiple matches for this'
-                                  ' pump manufacturer and model: {}.'.format(pump))
-            if len(pump) == 0:
-                return None
+            pump = self.pumps.get((Pumps.manufacturer == query['manufacturer']) &
+                                  (Pumps.model == query['model']))
+        
+            if not pump:
+                raise ValueError('{} {} pump is not in database'
+                                 .format(query['manufacturer'], query['model']))
 
-            return pump[0].doc_id
+            return pump.doc_id
     
     def find_limits(self, syringe_details, pump_details):
         '''Find the maximum and minimum rate for a given pump and syringe combination

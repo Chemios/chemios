@@ -14,10 +14,10 @@ import io
 import logging
 from chemios.utils import serial_write, write_i2c, construct_cmd, sio_write
 
-#Create syringe_type tuple for valdiation
-class _syringe(NamedTuple):
-    manufacturer: str
-    volume: float
+# #Create syringe_type tuple for valdiation
+# class _syringe(NamedTuple):
+#     manufacturer: str
+#     volume: float
  
 
 
@@ -33,7 +33,7 @@ class Chemyx(object):
         For the OEM module, the baudrate should be 38400
     """
 
-    def __init__(self, model: str, syringe_type: _syringe, ser: serial.Serial):
+    def __init__(self, model: str, syringe_type: tuple, ser: serial.Serial):
         self.model = model #model
         self.syringe_type = syringe_type
         self.ser = ser #serial object

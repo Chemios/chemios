@@ -1,1 +1,1 @@
-from .oceanoptics import OceanOptics
+from ._oceanoptics import OceanOptics
