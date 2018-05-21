@@ -19,7 +19,7 @@
 
 ## 🛠️<a name="installation"></a> Installation
 
-Watch the video guide here or follow the steps below to design and run your first experiment in minutes.
+Follow the steps below to design and run your first experiment in minutes.
 
 1. [Install python](https://www.python.org/downloads/) (version 3 or above) if you haven't already. Note that it is recommended to use python installed on the [cygwin](https://cygwin.com/install.html) terminal on Windows.
 2. Open up your terminal and install the chemios package with the following command:
