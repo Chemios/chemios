@@ -9,7 +9,7 @@
  '''
 #import seabreeze.spectrometers as sb
 import numpy as np
-from chemiosbrain.utils import convert_to_lists
+from chemios.utils import convert_to_lists
 import pandas as pd
 
 #Note to self: Make the buffer a list of dictionaries each with the stage position and spectraself.
