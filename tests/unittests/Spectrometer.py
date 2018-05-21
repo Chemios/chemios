@@ -7,8 +7,8 @@
  *
  */
  '''
-from chemiosbrain.spectrometer import Spectrometer
-from chemiosbrain.utils import convert_to_lists
+from chemios.components.spectrometers import OceanOptics
+from chemios.utils import convert_to_lists
 import MockSeabreeze
 import unittest
 import pandas as pd
@@ -27,7 +27,7 @@ class TestSpectrometer(unittest.TestCase):
     #Set up the spectrometer unit test
     def setUp(self):
         self.model = 'LH1357'
-        self.spec = Spectrometer(self.model, MockSeabreeze)
+        self.spec = OceanOptics(self.model, MockSeabreeze)
         df = pd.read_csv(sample_spectrometer_data)
         self.data = convert_to_lists(df)
         df = pd.read_csv(sample_blank_file_csv)
@@ -59,11 +59,11 @@ class TestSpectrometer(unittest.TestCase):
         with self.spec as spec:
             spec.store_blank(self.blank)
             spec.store_dark(self.dark)
-            output1 = spec.absorbance_read(integration_time=1000, 
+            spec.absorbance_read(integration_time=1000, 
                                           scans_to_average = 10,
                                           filter = 300,
                                           normalized = False)
-            output2 = spec.absorbance_read(integration_time=1000, 
+            spec.absorbance_read(integration_time=1000, 
                                           scans_to_average = 10,
                                           filter = 300,
                                           normalized = True)

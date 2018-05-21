@@ -84,10 +84,16 @@ class SyringeData(object):
         }
 
         #Check that same pump does not exist
-        pump_id = self.find_id(new_pump)
+        try:
+            pump_id = self.find_id(new_pump)
+        except ValueError:
+            # If the pump doesn't exist, it will throw a ValueError
+            pump_id = None
+
         if pump_id is not None:
             raise ValueError('{} {} already exists in the database'
-                              .format(manufacturer, model))
+                            .format(manufacturer, model))
+                            
         #Add pump information
         pump_id = self.pumps.insert(new_pump)
         logging.debug('{} {} pump added to the database.\n'
