@@ -49,7 +49,7 @@ jobs:
           command: |
             . venv/bin/activate
             pip install -e .
-            cd tests/unittests
+            cd tests
             python -m pytest
 
       - store_artifacts:
