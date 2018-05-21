@@ -77,11 +77,22 @@ def test_find_syringe_id(sdb, manufacturer, volume, inner_diameter):
     syringe_id = sdb.add_syringe(manufacturer = manufacturer,
                                  volume=volume, inner_diameter=inner_diameter)
     query = {
-                        'manufacturer': manufacturer,
-                        'volume': volume
+                'manufacturer': manufacturer,
+                'volume': volume
     }
     query_id = sdb.find_id(query)
     assert syringe_id == query_id
+
+@pytest.mark.parametrize('manufacturer', ['Hamilton'])
+@pytest.mark.parametrize('volume', [0.001, 1, 10])
+@pytest.mark.parametrize('inner_diameter', [14.474, 10])
+def test_find_diameter(sdb, manufacturer, volume, inner_diameter):
+    '''Test if find_id works properly for syringes'''
+    sdb.add_syringe(manufacturer = manufacturer,
+                    volume=volume, inner_diameter=inner_diameter)
+    
+    diameter = sdb.find_diameter(manufacturer=manufacturer, volume=volume)
+    assert inner_diameter == diameter 
 
 ################ Test Pump Methods #########################################
 @pytest.mark.parametrize('manufacturer', ['HarvardApparatus'])
@@ -141,18 +152,9 @@ def test_find_limits(sdb, limits):
     #Add limits
     sdb.add_limits(syringe_id=syringe_id, pump_id=pump_id,
                    min_rate=limits[0], max_rate=limits[1])
-    
-    syringe_details = {
-                        'manufacturer': 'Hamilton',
-                        'volume': 10
-    }
 
-    pump_details = {
-                        'manufacturer': 'HarvardApparatus',
-                        'model': 'Phd-Ultra'
-    }
-
-    saved_limits = sdb.find_limits(syringe_details, pump_details)
+    saved_limits = sdb.find_limits(syringe_manufacturer ='Hamilton', syringe_volume = 10,
+                                   pump_manufacturer='HarvardApparatus', pump_model='Phd-Ultra')
 
     assert saved_limits == limits
 

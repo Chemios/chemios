@@ -177,20 +177,44 @@ class SyringeData(object):
 
             return pump.doc_id
     
-    def find_limits(self, syringe_details, pump_details):
+    def find_limits(self, syringe_manufacturer: str, syringe_volume: float,
+                    pump_manufacturer: str, pump_model: str):
         '''Find the maximum and minimum rate for a given pump and syringe combination
         Arguments:
-            syringe_details: A dictionary containing the syringe manufacturer and volume
-            pump_details: A dictionary containing the pump manufacturer and model
+            syringe_manufacturer: Manufacturer of the syringe
+            syringe_volume: Volume of the syringe in mL
+            pump_manufacturer: Manufacturer of the syringe pump
+            pump_model: Model of the syringe pump
         Returns:
             list: The zeroth index is min rate is the first index max rate.
             Both rates are in microliters/min
         '''
+        syringe_details = {
+                            'manufacturer': syringe_manufacturer, 
+                            'volume': syringe_volume}
+        pump_details = {
+                         'manufacturer': pump_manufacturer,
+                         'model': pump_model}
         syringe_id = self.find_id(syringe_details)
         pump_id = self.find_id(pump_details)
         pump = self.pumps.get(doc_id=pump_id)
-        limits = pump['limits'][str(syringe_id)]
-        return limits
+        return pump['limits'][str(syringe_id)]
+    
+    def find_diameter(self, manufacturer:str, volume:float):
+        '''Find the syringe diameter
+        Arguments:
+            manufacturer: Syringe manufacturer
+            volume: Volume of the syringe diamaeter
+        Returns:
+            float: syringe diameter in millimeters
+        '''
+        Syringe = Query()
+        syringe = self.syringes.search((Syringe.manufacturer == manufacturer) & 
+                                       (Syringe.volume == volume))
+        if len(syringe) > 0:
+            return syringe[0]['inner_diameter']
+        if len(syringe) == 0:
+            return None
 
 
         

@@ -12,7 +12,7 @@ import serial
 import json
 import time
 import sys
-from chemios.utils import serial_write, write_i2c, construct_cmd, sio_write
+from chemios.utils import serial_write, write_i2c,  sio_write
 import re
 import io
 import logging

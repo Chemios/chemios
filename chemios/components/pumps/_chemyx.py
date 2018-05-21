@@ -12,58 +12,69 @@ import time
 import re
 import io
 import logging
-from chemios.utils import serial_write, write_i2c, construct_cmd, sio_write
+from chemios.utils import serial_write, write_i2c, sio_write
+from ._syringe_data import SyringeData
+from ._base import Pump
 
-# #Create syringe_type tuple for valdiation
-# class _syringe(NamedTuple):
-#     manufacturer: str
-#     volume: float
- 
+class Chemyx(Pump):
+    """ Class for interacting with Chemyx syringe pumps
+
+    Note:
+        The available models are the Fusion 100, Fusion 200, Fusion 4000, 
+        Fusion 6000, Nanojet and OEM.
+
+        *Baudrates*:
+        9600 only: Fusion 4000, Fusion 6000
+        38400 only: Nanojet, OEM
+        9600 or 38400: Fusion 100, Fusion 200
 
 
-class Chemyx(object):
-    """ Class for interacting with Chemyx pumps
+        See https://www.chemyx.com/support/knowledge-base/programming-and-computer-control/getting-started/ for more information
 
     Attributes:
-        model (str): Pump model, currently only OEM
-        syringe_type (NamedTuple): Syringe manufacturer and volume  
-        ser (serial.Serial): The :class:`serial` object for the Chemyx pump
-    
-    Note:
-        For the OEM module, the baudrate should be 38400
+        model : Pump model, currently only OEM  
+        ser: The :class:`serial` object for the Chemyx pump
+        **name: Reference name for the pump. Defaults to mL/min.
+        **units: Units to utilize. Defaults to ChemyxPump.
+        **syringe_manufacturer: Syringe manufacturer
+        **syringe_volume: Syringe volume in mL
+        **retry: seconds to sepnd retrying reading serial data back
     """
 
-    def __init__(self, model: str, syringe_type: tuple, ser: serial.Serial):
-        self.model = model #model
-        self.syringe_type = syringe_type
-        self.ser = ser #serial object
-
-        #Internal variables
-        self.sio = io.TextIOWrapper(io.BufferedRWPair(self.ser, self.ser))
-        self.rate = {'value': None,'units': None}
-        self.direction = None #INF for infuse or WDR for withdraw
-        self.pump_models = ['OEM']
-        self.sleep_time = 0.1
+    def __init__(self, model:str, ser:serial.Serial, **kwargs):
+        self.name = kwargs.get('name', 'ChemyxPump')
+        self.units = kwargs.get('units', 'mL/min')
+        self.retry = kwargs.get('retry', 1)
+        super(Chemyx, self).__init__(model=model, ser=ser, name=self.name, units=self.units)
 
         #Validation------------------------------------------------------------
         #Check that the model is one of the available models
-        if self.model not in self.pump_models:
+        models = ['Fusion 100', 'Fusion 200', 'Fusion 4000', 'Fusion 6000', 'NanoJet', 'OEM']
+        if self.model not in models:
             raise ValueError('{} is not one of the currently available pump models'.format(self.model))
-        
-        #Check for the correct baudrate
-        if self.model == 'OEM' and self.ser.baudrate != 38400:
-            raise ValueError("Baudrate is {}. Please change to 38400 for Chemyx OEM pump.".format(self.ser.baudrate))
-        
 
-        #Connection------------------------------------------------------------
-        #Set diameter
-        if self.diameter is not None:
-            cmd = 'set diameter %0.3f\x0D'%(self.diameter)
-            serial_write(self.ser, cmd, "set_diameter", True)
-            self.ser.flush()
+        #Check for the correct baudrate
+        if self.model in ['OEM', 'Nanoject'] and self.ser.baudrate != 38400:
+            raise ValueError("Baudrate is {}. Please change serial baudrate to 38400 for Chemyx {}."
+                             .format(self.ser.baudrate, self.model))
+        if self.model in ['Fusion 4000', 'Fusion 6000'] and self.ser.baudrate != 9600:
+            raise ValueError("Baudrate is {}. Please change to 9600 for Chemyx {}."
+                             .format(self.ser.baudrate, self.model))
+        check = int(self.ser.baudrate) == 9600 or int(self.ser.baudrate) == 38400
+        if self.model in ['Fusion 100', 'Fusion 200'] and not check:
+            raise ValueError("Baudrate is {}. Please change to 9600 or 38400 for Chemyx {}."
+                             .format(self.ser.baudrate, self.model))        
         
+        #Connection------------------------------------------------------------
         logging.debug("Connecting to Chemyx pump")
-        response = sio_write(self.sio, "view parameter\x0D", True, timeout =5)
+        #Set units
+        self.set_units(self.units)
+        #Set syringe if available
+        self.syringe_manufacturer  = kwargs.get('syringe_manufacturer', None)
+        self.volume  = kwargs.get('syringe_volume', None)
+        if self.syringe_manufacturer and self.volume:
+            self.set_syringe(manufacturer=self.syringe_manufacturer,
+                             volume=self.volume)
 
 
     def get_info(self):
@@ -71,33 +82,26 @@ class Chemyx(object):
 
         Yields:
             obj: model, address, syringe_diameter, rate
-
-        Todo:
-            * Properly implement reading information from serial
         """
-        info = {'model': self.model,
-                'address': self.address,
+        info = {
+                'name': self.name,
+                'model': self.model,
                 'syringe_diameter': self.diameter,
                 'rate': self.rate
                 }
-        if self.model == 'NE-1000':
-            cmd = '%iPHN'%(self.address)
-            output = serial_write(self.ser, cmd, 'get_info', True)
-            info['phase'] = str(output)
-            cmd = '%iVER'%(self.address)
-            output2 = serial_write(self.ser, cmd, 'get_info', True)
-            info['ver'] = output2
-        if self.model == 'Chemyx':
-            #Commenting out because of slow response time
-            # response = sio_write(self.sio, "view parameter\x0D", True, timeout =5)
-            # unit_table = {'0': 'MM', '1': 'UM', '2': 'MH','3':'UH'}
-            # match1 = re.search(r'(?<=rate = )\d+', response, re.M)
-            # value = match1.group()
-            # match2 = re.search(r'(?<=unit = )\d', response, re.M)
-            # unit_number = match2.group()
-            # unit = unit_table[unit_number]
-            # info['rate'] = {'value': value, 'units': unit }
-            pass
+        try:
+            response = sio_write(self.sio, "view parameter\x0D", True, timeout=self.retry)
+            #Invert key, value mapping on units dict
+            unit_table ={v: k for k, v in self.units_dict.items()}
+            #Get rate
+            match1 = re.search(r'(?<=rate = )\d+.(\d+)?', response, re.M)
+            value = match1.group()
+            match2 = re.search(r'(?<=unit = )\d', response, re.M)
+            unit_number = match2[0]
+            unit = unit_table[unit_number]
+            info['rate'] = {'value': value, 'units': unit }
+        except Exception as e:
+            logging.warning(e)
         return info
 
     def run(self):
@@ -105,142 +109,114 @@ class Chemyx(object):
         Note:
             To run a pump, first call set_rate and then call run.
         """
-        for i in range(5): self.ser.flush()
-        if self.model == 'NE-1000':
-            cmd = '%iRUN\x0D'%(self.address)
-            serial_write(self.ser, cmd, 'run')
-        if self.model == 'DIY':
-            if self.direction == 'INF':
-                cmd = "1:" + str(self.rate['value'])+ "&"
-                print(cmd)
-                write_i2c(cmd, self.bus, self.address)
-            elif self.direction == 'WDR':
-                cmd = "2:" + str(self.rate['value']) + "&"
-                print(cmd)
-                write_i2c(cmd, self.bus, self.address)
-        if self.model == 'Chemyx':
-            serial_write(self.ser, 'start\x0D', 'run')
-        if self.model == 'HA-PHD-Ultra':
-            serial_write(self.ser, 'irun\x0D', 'run')
+        self.ser.flushOutput()
+        serial_write(self.ser, 'start\x0D')
 
-    def set_diameter(self, diameter):
+    def set_syringe(self, manufacturer:str, volume: float,
+                    inner_diameter:float=None):
         """Set diameter of syringe on the pump
         Args:
-            diameter (float): Syringe diameter in millimeters
+            manufacturer: Syringe manufacturer
+            volume: Syringe total volume in mL
+            inner_diameter: Inner diameter of the syringe in mm (optional)                   
         """
-        if type(diameter) is not 'float':
-            raise ValueError('Please enter a decimal value for the diameter.')
-        self.diameter = diameter
+        #Try to get syringe diameter from database
+        self.diameter = self.sdb.find_diameter(manufacturer=manufacturer,
+                                               volume=volume)
+        if not self.diameter and inner_diameter:
+           self.diameter = inner_diameter
+        elif not self.diameter:
+            raise ValueError("{} {}mL syringe not in the database. "
+                             " To use a custom syringe, pass inner_diameter."
+                             .format(manufacturer, volume))
 
-        if self.model == 'NE-1000':
-            cmd = '%iDIA%d\x0D'%(self.address, self.diameter) #set function to rate
-            serial_write(self.ser, cmd, "set_diameter")
-        if self.model == 'Chemyx':
-            cmd = 'set diameter %d\x0D'%(self.diameter)
-            serial_write(self.ser, cmd, "set_diameter" )
-        if self.model == 'HA-PHD-Ultra':
-            raise NotImplementedError("Use syringe_type to pass in syringe manufacturer and volume for Harvard Apparatus pumps")
+        #Send command and check response
+        cmd = 'set diameter %0.3f\x0D'%(self.diameter)
+        expected_response = 'diameter = %0.3f\x0D'%(self.diameter) 
+        sio_write(self.sio, cmd,
+                  output = True, exp=expected_response, ctx = self.name, 
+                  timeout=self.retry)
+        
+        #Change internal variables
+        volume = self._convert_volume({'value': volume, 'units': 'mL'})
+        self.volume = volume
+        
+    def set_units(self, units: str):
+        '''Set the pump units
+        Arguments:
+            units: One of the unit strings in the note
+        Note:
+            Possible units are: mL/min, mL/hr, uL/min, uL/hr
+            Calling this function will also update the internal
+            rate and volume to match the new untis
+        '''
+        #validation
+        try:
+            unit_number = self.units_dict[units]
+        except KeyError:
+            raise ValueError("Invalid unit: {}."
+                                "Please specify one of the following units: mL/min, mL/hr, uL/min, uL/hr"
+                                .format(units))
+        #Set units
+        cmd = "set units {}".format(unit_number)
+        expected_response = "units = {}".format(unit_number)
+        sio_write(self.sio, cmd,
+                    output = True, exp=expected_response, ctx = self.name, 
+                    timeout=self.retry)
+        #Update internal variable
+        self.units = units
+        if self.volume:
+            self.volume =self._convert_volume(self.volume)
+            self.rate = self._convert_rate(self.rate)
+        return self.units
 
-
-    def set_rate(self, rate, direction):
+    def set_rate(self, rate, direction=None):
         """Set the flowrate of the pump
         Note:
             To run a pump, first call set_rate and then call run.
+            See :meth:`chemios.components.pumps.Chemyx.set_rate`for
+            units format.
 
         Args:
             rate (obj:'value', 'units'): {'value': pump flowrate, 'units': UM}
-            direction (str): Direction of pump. INF for infuse or WDR for withdraw
-        """
-        #check that the direction is valid
-        check = direction == "INF" or "WDR"
-        if not check:
-            raise ValueError('Must choose INF for infuse or WDR for withdraw')
-   
-        unit_conversion = {'MM': 60000, 'UM': 60 , "MH": 1000 , "UH": 1}
-        #check that the units are one of the possible units
-        try:
-            unit_conversion[rate['units']]
-        except KeyError:
-            logging.warning("Please specify one of the following units\n'MM' (milliliters/min)\n'UM' (microliters/min)\n'MH' (milliliters/hour)\n'UH' (microliters/min)")
-        
-        # check that the rate is within the limits
-        check_for_limits = len(list(self.rate_limits.keys())) > 0
-        if check_for_limits:
-            rate_value = rate['value']*unit_conversion[rate['units']] ## convert to microliters/hr
-            if rate_value > self.rate_limits['max_rate']:
-                logging.warning("Flowrate {} {} is greater than max rate limit".format(rate['value'],rate['units']))
-                return
-            if rate_value < self.rate_limits['min_rate']:
-                logging.warning("Flowrate {} {} is less than minimum rate limit".format(rate['value'],rate['units']))
-                return
+            direction (str): Direction of pump. INF for infuse or WDR for withdraw (optional)
+        Note:
+            The only way to set direction on Chemyx pumps is by changing the volume.
+            Currently, the software resets the volume to the max volume of the syringe.
 
-        self.rate = rate
-        self.direction = direction
-        
-        if self.model == 'NE-1000':
-            # cmd = '%iFUN RAT\x0D'%self.address #set function to rate
-            # serial_write(self.ser, cmd, "set_rate")
-            self.ser.flush()
-            time.sleep(0.1)
-            cmd1 = '%iDIR%s\x0D'%(self.address, direction)
-            serial_write(self.ser, cmd1, "set_rate") #Set the direction
-            time.sleep(2)
-            self.ser.flush()
-            time.sleep(2)
-            cmd2 = '%iRAT%.3f%s\x0D'%(self.address, rate['value'], rate['units'])
-            serial_write(self.ser, cmd2, "set_rate") #Set the rate
-        if self.model == 'Chemyx':
-            #Using units as work-around for Chemyx pumps not having adresses
-            #Address 0 corresponds with units 0, which is MM or milliliter/min
-            #Address 1 corresponds with unit 1, which is UM or microliters/min
-            if self.address == 0:
-                #Convert to everything to mL/min for 
-                unit_conversion = {'MM': 1, 'UM': 0.001 , "MH": 0.01667 , "UH": 0.00001667}
-                conversion = unit_conversion[rate['units']]
-                rate_value = conversion*self.rate['value']
-                volume_converted = conversion*self.volume
-            if self.address == 1:
-                unit_conversion = {'MM': 1000, 'UM': 1, "MH": 16.667, "UH": 0.01667}
-                conversion = unit_conversion[rate['units']]
-                rate_value = conversion*self.rate['value']
-                volume_converted = conversion*self.volume
+        """ 
+        #Check if syringe volume has been set
+        if not self.volume:
+            raise ValueError("Please set the syringe before calling set_rate.")
 
-            #Set rate
-            self.ser.flush()
-            cmd = 'set rate %0.3f\x0D'%(rate_value)
-            print(cmd + " ml/min")
-            serial_write(self.ser, cmd, "set_rate", True)
-            time.sleep(0.1)
-            #Set volume and direction
+        #Convert units if necessary
+        if rate['units'] != self.units:
+            rate = self._convert_rate(rate)
+        
+        #Set rate
+        self.ser.flushOutput()
+        cmd = 'set rate %0.3f\x0D'%(rate['value'])
+        expected_response = 'rate = %0.3f\x0D'%(rate['value'])
+        sio_write(self.sio, cmd,
+                  output = True, exp=expected_response, ctx = self.name, 
+                  timeout=self.retry)
+        time.sleep(0.1)
+        
+        #Set direction using the volume
+        if direction:
             if direction == 'INF':
-                cmd = "set volume %0.3f\x0D"%(volume_converted)
+                cmd = "set volume %0.3f\x0D"%(self.volume['value'])
             elif direction == 'WDR':
-                cmd = "set volume %0.3f\x0D"%(-1*volume_converted)
-            serial_write(self.ser, cmd, "set_rate", True)
+                cmd = "set volume %0.3f\x0D"%(-1*self.volume['value'])
+            else:
+                raise ValueError('Must choose INF for infuse or WDR for withdraw')
+            
+            serial_write(self.ser, cmd)
 
-            #Set units
-            # unit_table = {'MM': 0, 'UM': 1, 'MH': 2, 'UH':3}
-            # cmd = 'set units %i\x0D'%(unit_table[rate['units']])
-            # serial_write(self.ser, cmd, "set_units", True)
-            # time.sleep(0.1)
-        if self.model == 'HA-PHD-Ultra':
-            for i in range(5): self.ser.flush()
-            unit_table = {'MM': 'ml/min', 'UM': 'ul/min' , "MH": 'ml/h' , "UH": 'ul/h'}
-            units = unit_table[rate['units']]
-            cmd = "irate {} {}\x0D".format(rate['value'], units)
-            serial_write(self.ser, cmd, 'run')
+        #Change internal variable
+        self.rate = rate
             
     def stop(self):
         """Stop the pump"""
-        if self.model == 'NE-1000':
-            self.ser.flush()
-            time.sleep(0.1)
-            cmd = '%iSTP\x0D'%self.address
-            serial_write(self.ser,cmd, "stop_pump")
-            self.ser.flush()
-        if self.model == 'Chemyx' or self.model == 'HA-PHD-Ultra':
-            serial_write(self.ser, 'stop\x0D', "stop_pump")
-        if self.model == 'DIY':
-            my_cmd = "0:&"
-            write_i2c(my_cmd, self.bus, self.address)
-
+        serial_write(self.ser, 'stop\x0D')
+    
