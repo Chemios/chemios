@@ -1,5 +1,4 @@
 from chemios.components.pumps import Chemyx, HarvardApparatus, NewEra
-from dummyserial import Serial
 import time
 import json
 import pytest
