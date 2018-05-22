@@ -4,6 +4,10 @@ import re
 from ._syringe_data import SyringeData
 import os
 
+def module_path():
+    path = os.path.abspath(__file__)
+    return os.path.dirname(path)
+
 class Pump(object):
     '''Base class for pumps
 
@@ -25,8 +29,11 @@ class Pump(object):
         self.sio = io.TextIOWrapper(io.BufferedRWPair(self.ser, self.ser))
         self.rate = {'value': None,'units': None}
         self.direction = None #INF for infuse or WDR for withdraw
-        print(os.getcwd())
-        self.sdb = SyringeData('chemios/data/syringe_db.json')
+        current_path = module_path()
+        old_path = os.getcwd()
+        os.chdir(current_path)
+        self.sdb = SyringeData('../../data/syringe_db.json')
+        os.chdir(old_path)
         self.volume = None
         self.diameter = None
         self.units_dict = {'mL/min': '0', 'mL/hr': '1', 'uL/min': '2', 'uL/hr': 3}
