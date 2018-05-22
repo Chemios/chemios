@@ -2,6 +2,22 @@ from chemios.components.pumps import Chemyx
 from chemios.utils import SerialTestClass
 #from dummyserial import Serial
 import pytest
+import logging
+
+#Logging
+logFormatter = logging.Formatter("%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s")
+rootLogger = logging.getLogger()
+rootLogger.setLevel(logging.DEBUG)
+logfile = 'chemios_dev.log'
+fileHandler = logging.FileHandler(logfile)
+fileHandler.setLevel(logging.DEBUG)
+fileHandler.setFormatter(logFormatter)
+rootLogger.addHandler(fileHandler)
+
+consoleHandler = logging.StreamHandler()
+consoleHandler.setLevel(logging.INFO)
+consoleHandler.setFormatter(logFormatter)
+rootLogger.addHandler(consoleHandler)
 
 @pytest.fixture()
 def ser():
