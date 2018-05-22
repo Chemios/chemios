@@ -25,6 +25,7 @@ class Pump(object):
         self.sio = io.TextIOWrapper(io.BufferedRWPair(self.ser, self.ser))
         self.rate = {'value': None,'units': None}
         self.direction = None #INF for infuse or WDR for withdraw
+        print(os.getcwd())
         self.sdb = SyringeData('chemios/data/syringe_db.json')
         self.volume = None
         self.diameter = None
