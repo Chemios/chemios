@@ -1,10 +1,10 @@
-chemios.components package
-==========================
+chemios.pumps package
+=====================
 
 Module contents
 ---------------
 
-.. automodule:: chemios.components
+.. automodule:: chemios.pumps
     :members:
     :undoc-members:
     :show-inheritance:

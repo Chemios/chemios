@@ -1,12 +1,5 @@
+''' Omega Temperature Controller Module
 '''
-/*
- * Copyright 2018 Chemios
- * Chemios Temperature Cotnrol
- *
- * This code controls an Omega CN 9311 Temperature Controllers
- *
- */
- '''
 
 import minimalmodbus
 
@@ -36,9 +29,11 @@ security_register_post = 5632
 
 class OmegaCN9300Series(object):
     '''Class to Control Omega CN 9311 Temperature Controller
-    Attributes
+
+    Attributes:
         port (str): Serial port over which communication should be sent
         slave_address (int): Address of the temperature controller from 1 to 247
+
     Notes:
         Set the address on the Level C of the menu of the omega temperature controller
     '''
@@ -50,11 +45,13 @@ class OmegaCN9300Series(object):
 
     def get_current_temperature(self):
         ''' Method to get the current temperature
-        Yields
+
+        Yields:
             update = {
                     'temp_set_point': setpoint in deg C,
                     'current_temp': temperature in deg C
                     }
+
         '''
         setpoint = self.controller.read_register(temperature_setpoint_register, numberOfDecimals=1 ) #read only one setpoint register
         temperature = self.controller.read_register(temperature_register, 1)
@@ -66,8 +63,10 @@ class OmegaCN9300Series(object):
 
     def set_temperature(self, temp_set_point): #memory location for temperature set needed
         ''' Method to set the temperature
+        
         Args:
             temp_set_point (float): temperature setpoint in deg C
+
         '''
         #TODO ensure that the proper responses are received
         #Enter Program Mode

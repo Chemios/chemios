@@ -1,10 +1,10 @@
-chemios.components.spectrometers package
+chemios.temperature\_controllers package
 ========================================
 
 Module contents
 ---------------
 
-.. automodule:: chemios.components.spectrometers
+.. automodule:: chemios.temperature_controllers
     :members:
     :undoc-members:
     :show-inheritance:

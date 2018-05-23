@@ -1,4 +1,4 @@
-from chemios.components.pumps import Chemyx
+from chemios.pumps import Chemyx
 from chemios.utils import SerialTestClass
 #from dummyserial import Serial
 import pytest

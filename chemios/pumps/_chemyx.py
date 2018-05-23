@@ -24,9 +24,9 @@ class Chemyx(Pump):
         Fusion 6000, Nanojet and OEM.
 
         *Baudrates*:
-        9600 only: Fusion 4000, Fusion 6000
-        38400 only: Nanojet, OEM
-        9600 or 38400: Fusion 100, Fusion 200
+        * 9600 only: Fusion 4000, Fusion 6000
+        * 38400 only: Nanojet, OEM
+        * 9600 or 38400: Fusion 100, Fusion 200
 
 
         See https://www.chemyx.com/support/knowledge-base/programming-and-computer-control/getting-started/ for more information

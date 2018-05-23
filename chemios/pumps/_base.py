@@ -32,7 +32,7 @@ class Pump(object):
         current_path = module_path()
         old_path = os.getcwd()
         os.chdir(current_path)
-        self.sdb = SyringeData('../../data/syringe_db.json')
+        self.sdb = SyringeData('../data/syringe_db.json')
         os.chdir(old_path)
         self.volume = None
         self.diameter = None

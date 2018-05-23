@@ -36,7 +36,7 @@ Follow the steps below to design and run your first experiment in minutes.
     ````
 3. Enter into the root of the repository directory and run:
     ```bash
-    pip install e .;  pip install -r requirements.txt
+    pip install e .;pip install -r requirements.txt
     ```
 
 ## 👍 <a name="examples"></a> Examples
@@ -70,6 +70,7 @@ C.stop()
 ```
 ## 📋 <a name="documentation"></a> Documentation
 
+
 ## ⚙️ <a name="features"></a> Compatible Equipment
 
 - Chemios currently works with the following types of devices:
@@ -88,7 +89,7 @@ C.stop()
 
 ## 🎁 <a name="contributing"></a> Contributing
 
-We ❤️ contributors! The Chemios Framework came out of a senior design project at [NC State](https://www.ncsu.edu/) and is now maintained by Kobi Felton [@marcosfelt](https://github.com/marcosfelt) with help from 
+We ❤️ contributors! The Chemios Framework came out of a senior design project at [NC State](https://www.ncsu.edu/) and is now maintained by Kobi Felton [@marcosfelt](https://github.com/marcosfelt).
 
 We are looking in particular for people to extend the framework to work with more types of laboratory equipment. Feel free to [email Kobi](mailto:kobi.c.f@gmail.com) if you're interested.  If you already have some changes, please submit a [pull request](https://gist.github.com/Chaser324/ce0505fbed06b947d962).
 

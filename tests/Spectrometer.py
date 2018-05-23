@@ -7,7 +7,7 @@
  *
  */
  '''
-from chemios.components.spectrometers import OceanOptics
+from chemios.spectrometers import OceanOptics
 from chemios.utils import convert_to_lists
 import MockSeabreeze
 import unittest
