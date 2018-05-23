@@ -4,4 +4,4 @@ pandas
 minimalmodbus
 tinydb
 pytest
-serial
+pyserial
