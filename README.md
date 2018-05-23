@@ -70,7 +70,7 @@ C.stop()
 ```
 ## 📋 <a name="documentation"></a> Documentation
 
-The documentation is [here](chemios.readthedocs.io)
+You can find documentation for the chemios framework [here](chemios.readthedocs.io). More examples will be added soon.
 
 ## ⚙️ <a name="features"></a> Compatible Equipment
 
