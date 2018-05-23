@@ -7,7 +7,7 @@
  - 👨🏾‍🔬 [Why Chemios?](#why-chemios)
  - 🛠️ [Installation](#installation)
  - 👍 [Examples](#examples)
- - 📋 [Documentation][#documentation]
+ - 📋 [Documentation](#documentation)
  - ⚙️ [Compatabile Equipment](#features)
  - 🎁 [Contributing](#contributing)
 
