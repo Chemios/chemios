@@ -1,4 +1,4 @@
-from chemios.components.pumps import Chemyx, HarvardApparatus, NewEra
+from chemios.pumps import Chemyx, HarvardApparatus, NewEra
 import time
 import json
 import pytest

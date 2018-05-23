@@ -4,7 +4,7 @@ These are tests for storing and retrieving data about syringes
 from the SyringeData json database. 
 '''
 import pytest
-from chemios.components.pumps import SyringeData
+from chemios.pumps import SyringeData
 from tinydb import Query
 import os
 

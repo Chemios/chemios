@@ -1,11 +1,5 @@
-'''
-/*
- * Copyright 2018 Chemios
- * Chemios Reactor Brain Controller
- *
- * This code receives instructions from AWS IoT and used those to run the reactor.
- *
- */
+''' New Era Pump Module
+
  '''
 
 import serial
@@ -130,8 +124,6 @@ class NewEra(object):
         Yields:
             obj: model, address, syringe_diameter, rate
 
-        Todo:
-            * Properly implement reading information from serial
         """
         info = {'model': self.model,
                 'address': self.address,

@@ -1,12 +1,5 @@
+''' Chemios Ocean Optics Module
 '''
-/*
- * Copyright 2018 Chemios
- * Chemios Spectrometer
- *
- * Methods to control an Ocean Optics Spectrometer
- *
- */
- '''
 #import seabreeze.spectrometers as sb
 import numpy as np
 from chemios.utils import convert_to_lists
@@ -16,9 +9,11 @@ import pandas as pd
 #Use pop(0) to pop off the first spectra in the buffer when get_spectrum is called
 class OceanOptics(object):
     """Class to define the spectrometers
+
     Attributes:
         spectrometer_model (str): Model of the spectrometer (e.g., FLMS02673)
         seabreeze (:obj:): Seabreeze.spectrometers object
+
     """
     def __init__(self, spectrometer_model, seabreeze):
         self.spectrometer_model = spectrometer_model # Spectrometer model number
@@ -54,10 +49,13 @@ class OceanOptics(object):
         
     def read_spectrometer_raw(self, integration_time):
         """Function to print the raw data from the spectreomter
+
         Args:
             integration_time (float): Integration time in microseconds
+
         Yields:
             Numpy matrix with first column as wavelengths and second column a intensisties
+
         """
         # if not self.spectrometer_on:
         #     raise NameError("Spectrometer not connected")
@@ -84,8 +82,10 @@ class OceanOptics(object):
 
     def store_blank(self, blank):
         """ Method to save blank intensisties
+
         Args:
             blank (array): Two column array of wavelengths and intesities
+
         """
         if isinstance(blank, list):
             #assuming it a two column array of wavelengths and intensities
@@ -95,8 +95,10 @@ class OceanOptics(object):
 
     def store_dark(self, dark):
         """ Method to save dark intensisties
+
         Args:
             dark (array): Two column array of wavelengths and intesities
+
         """
         if isinstance(dark, list):
             #assuming it a two column array of wavelengths and intensities
@@ -114,8 +116,10 @@ class OceanOptics(object):
             scans_to_average (int): Number of scans to average over
             filter (int, optional): The starting point for the Spectrum (e.g, start from the 300th data point). Defaults to use the whole spectram
             normalize (bool): If true, absorbances will be normalized to the maximum absorbance.  Defaults to false.
+
         Yields:
             Numpy array with first column as wavelengths and second column as absorbance
+            
         """
         #check types
         if not isinstance(scans_to_average, int):
