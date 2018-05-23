@@ -1,7 +1,7 @@
 ![Chemios Framework ReadMe Banner](./assets/framework_readme_banner.jpg)
 
 [![CircleCI](https://circleci.com/gh/Chemios/chemios.svg?style=svg)](https://circleci.com/gh/Chemios/chemios)
- 
+[![Documentation Status](https://readthedocs.org/projects/chemios/badge/?version=latest)](https://chemios.readthedocs.io/en/latest/?badge=latest)
 
 ## Contents
  - 👨🏾‍🔬 [Why Chemios?](#why-chemios)
@@ -70,6 +70,7 @@ C.stop()
 ```
 ## 📋 <a name="documentation"></a> Documentation
 
+The documentation is [here](chemios.readthedocs.io)
 
 ## ⚙️ <a name="features"></a> Compatible Equipment
 
