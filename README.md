@@ -56,10 +56,8 @@ C = Chemyx(model='Phd-Ultra', ser=ser,
            syringe_manufacturer='Hamilton', syringe_volume=10)
 
 #Set the flowrate to infuse at 100 microliters per minute
-rate = {'value': 100,
-        'units': UM}                     
-C.set_rate(rate=rate
-            direction = 'INF')
+rate = {'value': 100, 'units': 'UM'}                   
+C.set_rate(rate=rate, direction = 'INF')
 
 #Run the pump for 5 seconds
 C.run()
