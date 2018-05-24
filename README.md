@@ -36,7 +36,7 @@ Follow the steps below to design and run your first experiment in minutes.
     ````
 3. Enter into the root of the repository directory and run:
     ```bash
-    pip install e .;pip install -r requirements.txt
+    pip install -e .;pip install -r requirements.txt
     ```
 
 ## 👍 <a name="examples"></a> Examples
