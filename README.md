@@ -21,9 +21,9 @@ Despite their price tag, these devices rarely have simple software interfaces. S
 We looked at the existing solutions, and we were not satisfied. Tetrascience is a paid monitoring platform that is [unaffordable for most labs][nature]. Labview has been used to automate lab equipment (see [Epps et al.][epps], [Reizman et al.][reizman], or [Dragone et al.][dragone]). However, LabView licenses cost $5000 annually. ThermoFisher Cloud is the most promising solution, but it only works with a limited number of Thermofisher products.
 
 ### The Solution
-The Chemios Framework is a simple, open-source (i.e. FREE) software package for laboratory automation and monitoring. It is easy-to-use and extensible. It currently works with pumps, spectrometers and temperature controllers. And, the list of equipment will continue to grow (see [Compatible Equipment](#features)) through an open source community. Please [submit an issue](https://github.com/Chemios/chemios/issues)
+The Chemios Framework is a simple, open-source (i.e. FREE) software package for laboratory automation and monitoring. It is easy-to-use and extensible. It currently works with pumps, spectrometers and temperature controllers. And, the list of equipment will continue to grow (see [Compatible Equipment](#features)) through an open source community. 
 
-The framework is written in python (the unoffical language of science) and actively maintained. 
+The framework is written in python (the unoffical language of science) and actively maintained. We are looking for which equipment to auomtate next; please [submit an issue](https://github.com/Chemios/chemios/issues) with what you would like to see!
 
 ## 🛠️<a name="installation"></a> Installation
 
