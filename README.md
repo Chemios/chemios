@@ -77,7 +77,7 @@ You can find documentation for the chemios framework [here](chemios.readthedocs.
      * Spectrometers: Ocean Optics 
      * Temperature Controllers: Omega CN 9300 Series
 
-- You can vote for which equipment should be added next [here][gform]!
+- Please [submit an issue](https://github.com/Chemios/chemios/issues) with what equipment we should automate next. It's easy; just do it!
 
 - Roadmap:
      * Finish unit testing syringe pumps (May 2018)
