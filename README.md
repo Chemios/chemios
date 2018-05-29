@@ -21,9 +21,9 @@ Despite their price tag, these devices rarely have simple software interfaces. S
 We looked at the existing solutions, and we were not satisfied. Tetrascience is a paid monitoring platform that is [unaffordable for most labs][nature]. Labview has been used to automate lab equipment (see [Epps et al.][epps], [Reizman et al.][reizman], or [Dragone et al.][dragone]). However, LabView licenses cost $5000 annually. ThermoFisher Cloud is the most promising solution, but it only works with a limited number of Thermofisher products.
 
 ### The Solution
-The Chemios Framework is a simple, open-source (i.e. FREE) software package for laboratory automation and monitoring. It is easy-to-use and extensible. It currently works with pumps, spectrometers and temperature controllers. And, the list of equipment will continue to grow (see [Compatible Equipment](#features)) through an open source community. Please [submit an issue](https://github.com/Chemios/chemios/issues)
+The Chemios Framework is a simple, open-source (i.e. FREE) software package for laboratory automation and monitoring. It is easy-to-use and extensible. It currently works with pumps, spectrometers and temperature controllers. And, the list of equipment will continue to grow (see [Compatible Equipment](#features)) through an open source community. 
 
-The framework is written in python (the unoffical language of science) and actively maintained. 
+The framework is written in python (the unoffical language of science) and actively maintained. We are looking for which equipment to auomtate next; please [vote][gform] for what equipment you'd like to see with what you would like to see!
 
 ## 🛠️<a name="installation"></a> Installation
 
@@ -36,7 +36,7 @@ Follow the steps below to design and run your first experiment in minutes.
     ````
 3. Enter into the root of the repository directory and run:
     ```bash
-    pip install e .;pip install -r requirements.txt
+    pip install -e .;pip install -r requirements.txt
     ```
 
 ## 👍 <a name="examples"></a> Examples
@@ -44,7 +44,7 @@ Follow the steps below to design and run your first experiment in minutes.
 Here is a how you'd use chemios to run a pump in an automated fashion.
 
 ```python
-from chemios.components.pumps import HarvardApparatus
+from chemios.pumps import HarvardApparatus
 from time import sleep
 import serial
 
@@ -68,7 +68,7 @@ C.stop()
 ```
 ## 📋 <a name="documentation"></a> Documentation
 
-You can find documentation for the chemios framework [here](chemios.readthedocs.io). More examples will be added soon.
+You can find documentation for the chemios framework [here](https://chemios.readthedocs.io/en/latest/?). More examples will be added soon.
 
 ## ⚙️ <a name="features"></a> Compatible Equipment
 
@@ -77,7 +77,7 @@ You can find documentation for the chemios framework [here](chemios.readthedocs.
      * Spectrometers: Ocean Optics 
      * Temperature Controllers: Omega CN 9300 Series
 
-- You can vote for which equipment should be added next [here][gform]!
+- Please [vote][gform] for what equipment you'd like to see with what you would like to see!
 
 - Roadmap:
      * Finish unit testing syringe pumps (May 2018)
