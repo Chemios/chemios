@@ -1,8 +1,6 @@
 import queue
 from abc import ABC, abstractmethod
-from chemios.constants import StatusCodes
-
-codes = StatusCodes()
+from ._constants import StatusCodes as codes
 
 
 class Protocol(ABC):
@@ -13,7 +11,7 @@ class Protocol(ABC):
     '''
 
     def __init__(self):
-        self.state = {'status': codes.idle}
+        self.state = {'status': codes.idle()}
         self.readings_buffer = queue.Queue()
 
     @abstractmethod
@@ -32,7 +30,7 @@ class Protocol(ABC):
 
     def stop(self):
         '''Stop a protocol'''
-        self.state['status'] = StatusCodes.stopped()
+        self.state['status'] = codes.stopped()
 
     def get_reading(self):
         '''Retrieve a reading from the readings buffer'''
