@@ -20,8 +20,9 @@ setup(
                  equipment through one easy-to-use interface"),
     packages=find_packages(exclude=['tests']),
     include_package_data=True,
-    keywords='chemios',
-    install_requires=['arrow', 'numpy', 'pandas', 'minimalmodbus', 'tinydb'],
+    keywords=['chemios', 'science', 'protocol', 'experiment', 'chemistry'
+              'biology', 'research', 'python', 'syringe pump', 'liquid handler'],
+    install_requires=['arrow', 'numpy', 'pandas', 'pint', 'pytest'],
     long_description_content_type=' text/markdown',
     classifiers=[
         "Development Status :: 3 - Alpha",

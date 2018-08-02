@@ -9,7 +9,7 @@ class StatusCodes:
         return text
 
     @classmethod
-    def idle(cls, status_text=None):
+    def idle(cls, status_text: str =None):
         '''Status of a protocol that is idle
 
         Args:
@@ -20,7 +20,7 @@ class StatusCodes:
         return cls._compose_message(100, "Idle", status_text)
 
     @classmethod
-    def running(cls, status_text=None):
+    def running(cls, status_text: str=None):
         '''Status of a protocol that is runnning
 
         Args:
@@ -31,7 +31,7 @@ class StatusCodes:
         return cls._compose_message(200, "Running", status_text)
 
     @classmethod
-    def stopped(cls, status_text=None):
+    def stopped(cls, status_text: str=None):
         '''Status of a protocol that was stopped before completion
 
         Args:

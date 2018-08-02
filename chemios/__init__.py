@@ -6,8 +6,8 @@ __author__ = """Chemios"""
 __email__ = 'hello@chemios.io'
 __version__ = '0.1.0'
 
-from ._protocol import Protocol  # noqa: F401
 from ._constants import StatusCodes  # noqa: F401
+from ._units import units
 
 # Set default logging handler to avoid "No handler found" warnings.
 import logging
