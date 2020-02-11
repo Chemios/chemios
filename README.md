@@ -44,7 +44,7 @@ Follow the steps below to design and run your first experiment in minutes.
 Here is a how you'd use chemios to run a pump in an automated fashion.
 
 ```python
-from chemios.pumps import HarvardApparatus
+from chemios.pumps import Chemyx
 from time import sleep
 import serial
 
