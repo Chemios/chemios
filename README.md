@@ -23,7 +23,7 @@ We looked at the existing solutions, and we were not satisfied. Tetrascience is 
 ### The Solution
 The Chemios Framework is a simple, open-source (i.e. FREE) software package for laboratory automation and monitoring. It is easy-to-use and extensible. It currently works with pumps, spectrometers and temperature controllers. And, the list of equipment will continue to grow (see [Compatible Equipment](#features)) through an open source community. 
 
-The framework is written in python (the unoffical language of science) and actively maintained. We are looking for which equipment to auomtate next; please [vote][gform] for what equipment you'd like to see with what you would like to see!
+The framework is written in python (the unoffical language of science) and actively maintained. We are looking for which equipment to automate next; please [vote][gform] for what equipment you'd like to see with what you would like to see!
 
 ## 🛠️<a name="installation"></a> Installation
 
